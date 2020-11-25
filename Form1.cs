@@ -23,10 +23,11 @@ namespace Sample01
 		private System.ComponentModel.Container components = null;
 
 		private int hVar, hVarX, hVarY, auxX, auxY;
-		private System.Windows.Forms.ListBox lbArray;
         private Button btnYminus;
         private Button btnXplus;
         private Button btnXminus;
+        private Label labelY;
+        private Label labelX;
         private TcAdsClient tcClient;
 	
 		public Form1()
@@ -56,20 +57,13 @@ namespace Sample01
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.lbArray = new System.Windows.Forms.ListBox();
             this.btnYplus = new System.Windows.Forms.Button();
             this.btnYminus = new System.Windows.Forms.Button();
             this.btnXplus = new System.Windows.Forms.Button();
             this.btnXminus = new System.Windows.Forms.Button();
+            this.labelY = new System.Windows.Forms.Label();
+            this.labelX = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // lbArray
-            // 
-            this.lbArray.Location = new System.Drawing.Point(12, 125);
-            this.lbArray.Name = "lbArray";
-            this.lbArray.Size = new System.Drawing.Size(144, 69);
-            this.lbArray.TabIndex = 0;
-            this.lbArray.SelectedIndexChanged += new System.EventHandler(this.lbArray_SelectedIndexChanged);
             // 
             // btnYplus
             // 
@@ -107,20 +101,42 @@ namespace Sample01
             this.btnXminus.Text = "X-";
             this.btnXminus.Click += new System.EventHandler(this.Xminus_Click);
             // 
+            // labelY
+            // 
+            this.labelY.AutoSize = true;
+            this.labelY.Location = new System.Drawing.Point(12, 149);
+            this.labelY.Name = "labelY";
+            this.labelY.Size = new System.Drawing.Size(36, 13);
+            this.labelY.TabIndex = 4;
+            this.labelY.Text = "labelY";
+            this.labelY.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // labelX
+            // 
+            this.labelX.AutoSize = true;
+            this.labelX.Location = new System.Drawing.Point(12, 127);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(36, 13);
+            this.labelX.TabIndex = 4;
+            this.labelX.Text = "labelX";
+            this.labelX.Click += new System.EventHandler(this.label1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(176, 269);
+            this.Controls.Add(this.labelX);
+            this.Controls.Add(this.labelY);
             this.Controls.Add(this.btnYminus);
             this.Controls.Add(this.btnXminus);
             this.Controls.Add(this.btnXplus);
             this.Controls.Add(this.btnYplus);
-            this.Controls.Add(this.lbArray);
             this.Name = "Form1";
             this.Text = "Sample01";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form1_Closing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion
@@ -168,15 +184,10 @@ namespace Sample01
 			
 				tcClient.WriteAny(hVarY, auxY);
 
-				//Array komplett auslesen			
+				//Leer y mostrar Y			
 				tcClient.Read(hVarY, dataStream);
-
-				lbArray.Items.Clear();
-				dataStream.Position = 0;			
-				for(int i=0; i<100; i++)
-				{
-					lbArray.Items.Add(binRead.ReadInt32().ToString());
-				}
+				dataStream.Position = 0;
+				labelY.Text = "Y=" + binRead.ReadInt32().ToString();
 			}
 			catch(Exception err)
 			{
@@ -184,7 +195,17 @@ namespace Sample01
 			}
 		}
 
-		private void Yminus_Click(object sender, System.EventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Yminus_Click(object sender, System.EventArgs e)
 		{
 			try
 			{
@@ -197,15 +218,11 @@ namespace Sample01
 
 				tcClient.WriteAny(hVarY, auxY);
 
-				//Array komplett auslesen			
-				tcClient.Read(hVarY, dataStream);
-
-				lbArray.Items.Clear();
+				//Leer y mostrar Y			
+				tcClient.Read(hVarY,dataStream);
 				dataStream.Position = 0;
-				for (int i = 0; i < 100; i++)
-				{
-					lbArray.Items.Add(binRead.ReadInt32().ToString());
-				}
+				labelY.Text = "Y=" + binRead.ReadInt32().ToString();
+
 			}
 			catch (Exception err)
 			{
@@ -226,15 +243,10 @@ namespace Sample01
 
 				tcClient.WriteAny(hVarX, auxX);
 
-				//Array komplett auslesen			
+				//Leer y mostrar X			
 				tcClient.Read(hVarX, dataStream);
-
-				lbArray.Items.Clear();
 				dataStream.Position = 0;
-				for (int i = 0; i < 100; i++)
-				{
-					lbArray.Items.Add(binRead.ReadInt32().ToString());
-				}
+				labelX.Text = "X=" + binRead.ReadInt32().ToString();
 			}
 			catch (Exception err)
 			{
@@ -255,15 +267,10 @@ namespace Sample01
 
 				tcClient.WriteAny(hVarX, auxX);
 
-				//Array komplett auslesen			
+				//Leer y mostrar X			
 				tcClient.Read(hVarX, dataStream);
-
-				lbArray.Items.Clear();
 				dataStream.Position = 0;
-				for (int i = 0; i < 100; i++)
-				{
-					lbArray.Items.Add(binRead.ReadInt32().ToString());
-				}
+				labelX.Text = "X=" + binRead.ReadInt32().ToString();
 			}
 			catch (Exception err)
 			{
@@ -276,7 +283,8 @@ namespace Sample01
 			//Resourcen wieder freigeben
 			try
 			{
-				tcClient.DeleteVariableHandle(hVar);					
+				tcClient.DeleteVariableHandle(hVarX);
+				tcClient.DeleteVariableHandle(hVarY);
 			}
 			catch(Exception err)
 			{
