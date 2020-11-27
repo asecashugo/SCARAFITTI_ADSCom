@@ -43,6 +43,7 @@ namespace Sample01
         private Label Velocidad;
         private Label EnObjetivo;
         private Label tolerancia;
+        private TextBox textBox1;
         private TcAdsClient tcClient;
 	
 		public Form1()
@@ -97,6 +98,7 @@ namespace Sample01
             this.tolerancia = new System.Windows.Forms.Label();
             this.Velocidad = new System.Windows.Forms.Label();
             this.chb_parada = new System.Windows.Forms.CheckBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -269,6 +271,7 @@ namespace Sample01
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.EnObjetivo);
             this.groupBox2.Controls.Add(this.Error);
             this.groupBox2.Controls.Add(this.chb_simulacion);
@@ -287,7 +290,7 @@ namespace Sample01
             this.groupBox2.Controls.Add(this.objetivoY);
             this.groupBox2.Location = new System.Drawing.Point(15, 154);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(263, 203);
+            this.groupBox2.Size = new System.Drawing.Size(268, 203);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Posición";
@@ -358,6 +361,14 @@ namespace Sample01
             this.chb_parada.UseVisualStyleBackColor = false;
             this.chb_parada.CheckedChanged += new System.EventHandler(this.chb_parada_CheckedChanged);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(183, 169);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(74, 20);
+            this.textBox1.TabIndex = 9;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
+            // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -422,6 +433,11 @@ namespace Sample01
         {
             tcClient.WriteAny(hVarSimulacion, chb_simulacion.Checked);
 
+        }
+
+        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        {
+            tcClient.WriteAny(hVarVelocidad, Convert.ToSingle(textBox1.Text));
         }
 
         private void lbArray_SelectedIndexChanged(object sender, EventArgs e)
