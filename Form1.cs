@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
@@ -18,18 +19,17 @@ namespace Sample01
 	{
         private IContainer components;
         private int hVar, hVarX, hVarY, auxX, auxY, hVarRealX, hVarRealY, hVarSimX, hVarSimY, hVarVelocidad, hVarTolerancia;
-        private int hVarSimulacion, hVarParada, hVarEnObjetivo;
+        private int hVarSimulacion, hVarParada, hVarEnObjetivo, hVarError, hVarAlfa, hVarBeta;
+        private bool auxError;
+        private int hVarStringCommand, hVarStringFeedback;
         private Label objetivoY;
         private Label objetivoX;
-        private Label label1;
-        private Label label2;
         private Label label3;
         private Label label4;
-        private Label label5;
         private Label realX;
         private Label realY;
-        private Label simX;
-        private Label simY;
+        private Label labelAlfa;
+        private Label labelBeta;
         private Timer timer1;
         private GroupBox groupBox1;
         private Button btnYplus;
@@ -39,11 +39,14 @@ namespace Sample01
         private GroupBox groupBox2;
         private CheckBox chb_simulacion;
         private CheckBox chb_parada;
-        private Label Error;
+        private Label LabelError;
         private Label Velocidad;
         private Label EnObjetivo;
         private Label tolerancia;
         private TextBox textBox1;
+        private GroupBox groupBox3;
+        private TextBox CommandBox;
+        private Label LabelGFeedback;
         private TcAdsClient tcClient;
 	
 		public Form1()
@@ -76,15 +79,12 @@ namespace Sample01
             this.components = new System.ComponentModel.Container();
             this.objetivoY = new System.Windows.Forms.Label();
             this.objetivoX = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.realX = new System.Windows.Forms.Label();
             this.realY = new System.Windows.Forms.Label();
-            this.simX = new System.Windows.Forms.Label();
-            this.simY = new System.Windows.Forms.Label();
+            this.labelAlfa = new System.Windows.Forms.Label();
+            this.labelBeta = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnYminus = new System.Windows.Forms.Button();
@@ -92,15 +92,19 @@ namespace Sample01
             this.btnXminus = new System.Windows.Forms.Button();
             this.btnXplus = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.EnObjetivo = new System.Windows.Forms.Label();
-            this.Error = new System.Windows.Forms.Label();
+            this.LabelError = new System.Windows.Forms.Label();
             this.chb_simulacion = new System.Windows.Forms.CheckBox();
             this.tolerancia = new System.Windows.Forms.Label();
             this.Velocidad = new System.Windows.Forms.Label();
             this.chb_parada = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.CommandBox = new System.Windows.Forms.TextBox();
+            this.LabelGFeedback = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // objetivoY
@@ -122,25 +126,6 @@ namespace Sample01
             this.objetivoX.TabIndex = 4;
             this.objetivoX.Text = "labelX";
             this.objetivoX.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(14, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "X";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 95);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(14, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Y";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -164,17 +149,6 @@ namespace Sample01
             this.label4.Text = "Real";
             this.label4.Click += new System.EventHandler(this.label3_Click);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(180, 29);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Simulado";
-            this.label5.Click += new System.EventHandler(this.label3_Click);
-            // 
             // realX
             // 
             this.realX.AutoSize = true;
@@ -195,25 +169,25 @@ namespace Sample01
             this.realY.Text = "realy";
             this.realY.Click += new System.EventHandler(this.label1_Click);
             // 
-            // simX
+            // labelAlfa
             // 
-            this.simX.AutoSize = true;
-            this.simX.Location = new System.Drawing.Point(180, 60);
-            this.simX.Name = "simX";
-            this.simX.Size = new System.Drawing.Size(29, 13);
-            this.simX.TabIndex = 4;
-            this.simX.Text = "simX";
-            this.simX.Click += new System.EventHandler(this.label1_Click);
+            this.labelAlfa.AutoSize = true;
+            this.labelAlfa.Location = new System.Drawing.Point(180, 60);
+            this.labelAlfa.Name = "labelAlfa";
+            this.labelAlfa.Size = new System.Drawing.Size(24, 13);
+            this.labelAlfa.TabIndex = 4;
+            this.labelAlfa.Text = "alfa";
+            this.labelAlfa.Click += new System.EventHandler(this.label1_Click);
             // 
-            // simY
+            // labelBeta
             // 
-            this.simY.AutoSize = true;
-            this.simY.Location = new System.Drawing.Point(180, 95);
-            this.simY.Name = "simY";
-            this.simY.Size = new System.Drawing.Size(29, 13);
-            this.simY.TabIndex = 4;
-            this.simY.Text = "simY";
-            this.simY.Click += new System.EventHandler(this.label1_Click);
+            this.labelBeta.AutoSize = true;
+            this.labelBeta.Location = new System.Drawing.Point(180, 95);
+            this.labelBeta.Name = "labelBeta";
+            this.labelBeta.Size = new System.Drawing.Size(28, 13);
+            this.labelBeta.TabIndex = 4;
+            this.labelBeta.Text = "beta";
+            this.labelBeta.Click += new System.EventHandler(this.label1_Click);
             // 
             // timer1
             // 
@@ -273,19 +247,16 @@ namespace Sample01
             // 
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.EnObjetivo);
-            this.groupBox2.Controls.Add(this.Error);
+            this.groupBox2.Controls.Add(this.LabelError);
             this.groupBox2.Controls.Add(this.chb_simulacion);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.simX);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.tolerancia);
             this.groupBox2.Controls.Add(this.Velocidad);
-            this.groupBox2.Controls.Add(this.simY);
+            this.groupBox2.Controls.Add(this.labelBeta);
             this.groupBox2.Controls.Add(this.realX);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.objetivoX);
-            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.labelAlfa);
             this.groupBox2.Controls.Add(this.realY);
             this.groupBox2.Controls.Add(this.objetivoY);
             this.groupBox2.Location = new System.Drawing.Point(15, 154);
@@ -295,24 +266,33 @@ namespace Sample01
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Posición";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(183, 169);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(74, 20);
+            this.textBox1.TabIndex = 9;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
+            // 
             // EnObjetivo
             // 
             this.EnObjetivo.AutoSize = true;
             this.EnObjetivo.Location = new System.Drawing.Point(59, 152);
             this.EnObjetivo.Name = "EnObjetivo";
-            this.EnObjetivo.Size = new System.Drawing.Size(29, 13);
+            this.EnObjetivo.Size = new System.Drawing.Size(59, 13);
             this.EnObjetivo.TabIndex = 8;
-            this.EnObjetivo.Text = "Error";
+            this.EnObjetivo.Text = "EnObjetivo";
             this.EnObjetivo.Click += new System.EventHandler(this.label6_Click);
             // 
-            // Error
+            // LabelError
             // 
-            this.Error.AutoSize = true;
-            this.Error.Location = new System.Drawing.Point(59, 127);
-            this.Error.Name = "Error";
-            this.Error.Size = new System.Drawing.Size(29, 13);
-            this.Error.TabIndex = 8;
-            this.Error.Text = "Error";
+            this.LabelError.AutoSize = true;
+            this.LabelError.Location = new System.Drawing.Point(59, 127);
+            this.LabelError.Name = "LabelError";
+            this.LabelError.Size = new System.Drawing.Size(29, 13);
+            this.LabelError.TabIndex = 8;
+            this.LabelError.Text = "Error";
+            this.LabelError.Click += new System.EventHandler(this.Error_Click);
             // 
             // chb_simulacion
             // 
@@ -361,18 +341,40 @@ namespace Sample01
             this.chb_parada.UseVisualStyleBackColor = false;
             this.chb_parada.CheckedChanged += new System.EventHandler(this.chb_parada_CheckedChanged);
             // 
-            // textBox1
+            // groupBox3
             // 
-            this.textBox1.Location = new System.Drawing.Point(183, 169);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(74, 20);
-            this.textBox1.TabIndex = 9;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
+            this.groupBox3.Controls.Add(this.CommandBox);
+            this.groupBox3.Controls.Add(this.LabelGFeedback);
+            this.groupBox3.Location = new System.Drawing.Point(15, 363);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(268, 100);
+            this.groupBox3.TabIndex = 11;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "G-Code";
+            // 
+            // CommandBox
+            // 
+            this.CommandBox.Location = new System.Drawing.Point(10, 71);
+            this.CommandBox.Name = "CommandBox";
+            this.CommandBox.Size = new System.Drawing.Size(224, 20);
+            this.CommandBox.TabIndex = 12;
+            this.CommandBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            // 
+            // label1
+            // 
+            this.LabelGFeedback.AutoSize = true;
+            this.LabelGFeedback.Location = new System.Drawing.Point(7, 27);
+            this.LabelGFeedback.Name = "label1";
+            this.LabelGFeedback.Size = new System.Drawing.Size(55, 13);
+            this.LabelGFeedback.TabIndex = 8;
+            this.LabelGFeedback.Text = "Feedback";
+            this.LabelGFeedback.Click += new System.EventHandler(this.label6_Click);
             // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(443, 466);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.chb_parada);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -383,6 +385,8 @@ namespace Sample01
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -416,6 +420,11 @@ namespace Sample01
                 hVarSimulacion = tcClient.CreateVariableHandle("GVL.simulacion");
                 hVarParada = tcClient.CreateVariableHandle("GVL.parada");
                 hVarEnObjetivo = tcClient.CreateVariableHandle("GVL.en_objetivo_alfa");
+                hVarError = tcClient.CreateVariableHandle("GVL.error");
+                hVarAlfa = tcClient.CreateVariableHandle("GVL.alfa");
+                hVarBeta = tcClient.CreateVariableHandle("GVL.alfa");
+                hVarStringCommand = tcClient.CreateVariableHandle("IO.string_in");
+                hVarStringFeedback = tcClient.CreateVariableHandle("IO.string_out");
 
             }
             catch (Exception err)
@@ -429,6 +438,11 @@ namespace Sample01
             tcClient.WriteAny(hVarParada, chb_parada.Checked);
         }
 
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            tcClient.WriteAnyString(hVarStringCommand, CommandBox.Text, 80, System.Text.Encoding.Default);
+        }
+
         private void chb_simulacion_CheckedChanged(object sender, EventArgs e)
         {
             tcClient.WriteAny(hVarSimulacion, chb_simulacion.Checked);
@@ -438,6 +452,11 @@ namespace Sample01
         private void textBox1_TextChanged_1(object sender, EventArgs e)
         {
             tcClient.WriteAny(hVarVelocidad, Convert.ToSingle(textBox1.Text));
+        }
+
+        private void Error_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void lbArray_SelectedIndexChanged(object sender, EventArgs e)
@@ -492,9 +511,35 @@ namespace Sample01
             objetivoY.Refresh();
             objetivoX.Text = auxX + " mm";
             objetivoX.Refresh();
+            //mostrar realX
             tcClient.Read(hVarRealX, dataStream);
             dataStream.Position = 0;
             realX.Text = binRead.ReadInt32().ToString() + " mm";
+            //mostrar realY
+            tcClient.Read(hVarRealY, dataStream);
+            dataStream.Position = 0;
+            realY.Text = binRead.ReadInt32().ToString() + " mm";
+            //mostrar alfa
+            tcClient.Read(hVarAlfa, dataStream);
+            dataStream.Position = 0;
+            realY.Text = "alfa = " + binRead.ReadInt32().ToString() + "º";
+            //mostrar beta
+            tcClient.Read(hVarRealY, dataStream);
+            dataStream.Position = 0;
+            realY.Text = binRead.ReadInt32().ToString() + " mm";
+
+//            auxError = tcClient.ReadAny(hVarError, auxError.GetType().Name);
+            LabelError.Text = Convert.ToString(hVarError.Equals(1));
+
+            LabelError.Refresh();
+
+            //GCode listen
+            string str = tcClient.ReadAnyString(hVarStringFeedback, 80, Encoding.Default);
+            LabelGFeedback.Text = str;
+            LabelGFeedback.Refresh();
+
+
+
 
         }
 
