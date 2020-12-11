@@ -19,8 +19,8 @@ namespace Sample01
 	{
         private IContainer components;
         private int hVarX, hVarY, auxX, auxY, hVarRealX, hVarRealY, hVarSimX, hVarSimY, hVarVelocidad, hVarTolerancia;
-        private int hVarSimulacion, hVarParada, hVarEnObjetivo, hVarError, hVarAlfa, hVarBeta,hVarRegimen;
-        private bool auxError;
+        private int hVarSimulacion_alfa, hVarSimulacion_beta, hVarParada, hVarEnObjetivo, hVarError, hVarAlfa, hVarBeta,hVarRegimenMax, hVarQuieto, hVarCommsStatus;
+        private int hVarRegimenAlfa, hVarRegimenBeta, hVarTopeAlfa, hVarTopeBeta;
         private int hVarStringCommand, hVarStringFeedback;
         private Label objetivoY;
         private Label objetivoX;
@@ -37,10 +37,8 @@ namespace Sample01
         private Button btnXminus;
         private Button btnYminus;
         private GroupBox groupBox2;
-        private CheckBox chb_simulacion;
-        private Label LabelError;
+        private CheckBox chb_simulacion_alfa;
         private Label Velocidad;
-        private Label EnObjetivo;
         private Label tolerancia;
         private TextBox textBoxVelocidad;
         private GroupBox groupBox3;
@@ -55,6 +53,24 @@ namespace Sample01
         private Label label1;
         private Label label5;
         private Label labelRegimen;
+        private Label labelParada;
+        private Label labelComms;
+        private CheckBox chb_simulacion_beta;
+        private Label labelErrorObjetivo;
+        private GroupBox groupBox4;
+        private Label labelVelSim;
+        private Label labelRegimenBeta;
+        private Label label7;
+        private Label labelRegimenAlfa;
+        private Label label6;
+        private Label labelTopeBeta;
+        private Label labelTopeAlfa;
+        private GroupBox groupBox5;
+        private GroupBox groupBox6;
+        private Label labelEnObjetivo;
+        private CheckBox checkBoxTopeBeta;
+        private CheckBox checkBoxTopeAlfa;
+        private TextBox textBoxRegMax;
         private TcAdsClient tcClient;
 	
 		public Form1()
@@ -101,26 +117,44 @@ namespace Sample01
             this.btnXminus = new System.Windows.Forms.Button();
             this.btnXplus = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.labelRegimenBeta = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labelRegimenAlfa = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.labelRegimen = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxTolerancia = new System.Windows.Forms.TextBox();
-            this.textBoxVelocidad = new System.Windows.Forms.TextBox();
-            this.EnObjetivo = new System.Windows.Forms.Label();
-            this.LabelError = new System.Windows.Forms.Label();
-            this.chb_simulacion = new System.Windows.Forms.CheckBox();
             this.tolerancia = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBoxTopeBeta = new System.Windows.Forms.CheckBox();
+            this.labelTopeBeta = new System.Windows.Forms.Label();
+            this.checkBoxTopeAlfa = new System.Windows.Forms.CheckBox();
+            this.labelTopeAlfa = new System.Windows.Forms.Label();
+            this.textBoxVelocidad = new System.Windows.Forms.TextBox();
+            this.chb_simulacion_alfa = new System.Windows.Forms.CheckBox();
             this.Velocidad = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.mandarComando = new System.Windows.Forms.Button();
             this.CommandBox = new System.Windows.Forms.TextBox();
+            this.labelComms = new System.Windows.Forms.Label();
             this.LabelGFeedback = new System.Windows.Forms.Label();
             this.BotonParada = new System.Windows.Forms.Button();
             this.BotonArranque = new System.Windows.Forms.Button();
+            this.labelParada = new System.Windows.Forms.Label();
+            this.chb_simulacion_beta = new System.Windows.Forms.CheckBox();
+            this.labelErrorObjetivo = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.labelVelSim = new System.Windows.Forms.Label();
+            this.labelEnObjetivo = new System.Windows.Forms.Label();
+            this.textBoxRegMax = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // objetivoY
@@ -158,7 +192,7 @@ namespace Sample01
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(98, 29);
+            this.label4.Location = new System.Drawing.Point(93, 29);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 13);
             this.label4.TabIndex = 5;
@@ -168,7 +202,7 @@ namespace Sample01
             // realX
             // 
             this.realX.AutoSize = true;
-            this.realX.Location = new System.Drawing.Point(98, 60);
+            this.realX.Location = new System.Drawing.Point(93, 60);
             this.realX.Name = "realX";
             this.realX.Size = new System.Drawing.Size(31, 13);
             this.realX.TabIndex = 4;
@@ -178,7 +212,7 @@ namespace Sample01
             // realY
             // 
             this.realY.AutoSize = true;
-            this.realY.Location = new System.Drawing.Point(98, 95);
+            this.realY.Location = new System.Drawing.Point(93, 95);
             this.realY.Name = "realY";
             this.realY.Size = new System.Drawing.Size(29, 13);
             this.realY.TabIndex = 4;
@@ -188,7 +222,8 @@ namespace Sample01
             // labelAlfa
             // 
             this.labelAlfa.AutoSize = true;
-            this.labelAlfa.Location = new System.Drawing.Point(152, 60);
+            this.labelAlfa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAlfa.Location = new System.Drawing.Point(174, 60);
             this.labelAlfa.Name = "labelAlfa";
             this.labelAlfa.Size = new System.Drawing.Size(24, 13);
             this.labelAlfa.TabIndex = 4;
@@ -198,7 +233,7 @@ namespace Sample01
             // labelBeta
             // 
             this.labelBeta.AutoSize = true;
-            this.labelBeta.Location = new System.Drawing.Point(152, 95);
+            this.labelBeta.Location = new System.Drawing.Point(174, 95);
             this.labelBeta.Name = "labelBeta";
             this.labelBeta.Size = new System.Drawing.Size(28, 13);
             this.labelBeta.TabIndex = 4;
@@ -273,16 +308,12 @@ namespace Sample01
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.labelRegimen);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.textBoxTolerancia);
-            this.groupBox2.Controls.Add(this.textBoxVelocidad);
-            this.groupBox2.Controls.Add(this.EnObjetivo);
-            this.groupBox2.Controls.Add(this.LabelError);
-            this.groupBox2.Controls.Add(this.chb_simulacion);
+            this.groupBox2.Controls.Add(this.textBoxRegMax);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.labelRegimenBeta);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.labelRegimenAlfa);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.tolerancia);
-            this.groupBox2.Controls.Add(this.Velocidad);
             this.groupBox2.Controls.Add(this.labelBeta);
             this.groupBox2.Controls.Add(this.realX);
             this.groupBox2.Controls.Add(this.label3);
@@ -292,99 +323,59 @@ namespace Sample01
             this.groupBox2.Controls.Add(this.labelAlfa);
             this.groupBox2.Controls.Add(this.realY);
             this.groupBox2.Controls.Add(this.objetivoY);
+            this.groupBox2.Controls.Add(this.labelRegimen);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.textBoxTolerancia);
+            this.groupBox2.Controls.Add(this.tolerancia);
+            this.groupBox2.Controls.Add(this.groupBox5);
+            this.groupBox2.Controls.Add(this.groupBox6);
             this.groupBox2.Location = new System.Drawing.Point(15, 154);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(316, 203);
+            this.groupBox2.Size = new System.Drawing.Size(439, 203);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Posición";
             // 
-            // labelRegimen
+            // label6
             // 
-            this.labelRegimen.AutoSize = true;
-            this.labelRegimen.Location = new System.Drawing.Point(212, 176);
-            this.labelRegimen.Name = "labelRegimen";
-            this.labelRegimen.Size = new System.Drawing.Size(66, 13);
-            this.labelRegimen.TabIndex = 16;
-            this.labelRegimen.Text = "Regimen [%]";
-            this.labelRegimen.Click += new System.EventHandler(this.labelRegimen_Click);
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(314, 29);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(36, 13);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "Tope";
+            this.label6.Click += new System.EventHandler(this.label6_Click_1);
             // 
-            // label5
+            // labelRegimenBeta
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(209, 152);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 13);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Regimen [%]";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
+            this.labelRegimenBeta.AutoSize = true;
+            this.labelRegimenBeta.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRegimenBeta.Location = new System.Drawing.Point(225, 95);
+            this.labelRegimenBeta.Name = "labelRegimenBeta";
+            this.labelRegimenBeta.Size = new System.Drawing.Size(65, 13);
+            this.labelRegimenBeta.TabIndex = 19;
+            this.labelRegimenBeta.Text = "regimenbeta";
             // 
-            // textBoxTolerancia
+            // label7
             // 
-            this.textBoxTolerancia.Location = new System.Drawing.Point(96, 169);
-            this.textBoxTolerancia.Name = "textBoxTolerancia";
-            this.textBoxTolerancia.Size = new System.Drawing.Size(54, 20);
-            this.textBoxTolerancia.TabIndex = 14;
-            this.textBoxTolerancia.TextChanged += new System.EventHandler(this.textBox1_TextChanged_2);
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(225, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(56, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Regimen";
             // 
-            // textBoxVelocidad
+            // labelRegimenAlfa
             // 
-            this.textBoxVelocidad.Location = new System.Drawing.Point(155, 169);
-            this.textBoxVelocidad.Name = "textBoxVelocidad";
-            this.textBoxVelocidad.Size = new System.Drawing.Size(51, 20);
-            this.textBoxVelocidad.TabIndex = 9;
-            this.textBoxVelocidad.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
-            // 
-            // EnObjetivo
-            // 
-            this.EnObjetivo.AutoSize = true;
-            this.EnObjetivo.Location = new System.Drawing.Point(31, 152);
-            this.EnObjetivo.Name = "EnObjetivo";
-            this.EnObjetivo.Size = new System.Drawing.Size(59, 13);
-            this.EnObjetivo.TabIndex = 8;
-            this.EnObjetivo.Text = "EnObjetivo";
-            this.EnObjetivo.Click += new System.EventHandler(this.label6_Click);
-            // 
-            // LabelError
-            // 
-            this.LabelError.AutoSize = true;
-            this.LabelError.Location = new System.Drawing.Point(31, 127);
-            this.LabelError.Name = "LabelError";
-            this.LabelError.Size = new System.Drawing.Size(29, 13);
-            this.LabelError.TabIndex = 8;
-            this.LabelError.Text = "Error";
-            this.LabelError.Click += new System.EventHandler(this.Error_Click);
-            // 
-            // chb_simulacion
-            // 
-            this.chb_simulacion.AutoSize = true;
-            this.chb_simulacion.Location = new System.Drawing.Point(155, 127);
-            this.chb_simulacion.Name = "chb_simulacion";
-            this.chb_simulacion.Size = new System.Drawing.Size(77, 17);
-            this.chb_simulacion.TabIndex = 7;
-            this.chb_simulacion.Text = "Simulación";
-            this.chb_simulacion.UseVisualStyleBackColor = true;
-            this.chb_simulacion.CheckedChanged += new System.EventHandler(this.chb_simulacion_CheckedChanged);
-            // 
-            // tolerancia
-            // 
-            this.tolerancia.AutoSize = true;
-            this.tolerancia.Location = new System.Drawing.Point(93, 152);
-            this.tolerancia.Name = "tolerancia";
-            this.tolerancia.Size = new System.Drawing.Size(57, 13);
-            this.tolerancia.TabIndex = 4;
-            this.tolerancia.Text = "Tolerancia";
-            this.tolerancia.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // Velocidad
-            // 
-            this.Velocidad.AutoSize = true;
-            this.Velocidad.Location = new System.Drawing.Point(152, 152);
-            this.Velocidad.Name = "Velocidad";
-            this.Velocidad.Size = new System.Drawing.Size(54, 13);
-            this.Velocidad.TabIndex = 4;
-            this.Velocidad.Text = "Velocidad";
-            this.Velocidad.Click += new System.EventHandler(this.label1_Click);
+            this.labelRegimenAlfa.AutoSize = true;
+            this.labelRegimenAlfa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRegimenAlfa.Location = new System.Drawing.Point(225, 60);
+            this.labelRegimenAlfa.Name = "labelRegimenAlfa";
+            this.labelRegimenAlfa.Size = new System.Drawing.Size(61, 13);
+            this.labelRegimenAlfa.TabIndex = 17;
+            this.labelRegimenAlfa.Text = "regimenalfa";
             // 
             // label2
             // 
@@ -406,10 +397,138 @@ namespace Sample01
             this.label1.Text = "X";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
+            // labelRegimen
+            // 
+            this.labelRegimen.AutoSize = true;
+            this.labelRegimen.Location = new System.Drawing.Point(257, 152);
+            this.labelRegimen.Name = "labelRegimen";
+            this.labelRegimen.Size = new System.Drawing.Size(66, 13);
+            this.labelRegimen.TabIndex = 16;
+            this.labelRegimen.Text = "Regimen [%]";
+            this.labelRegimen.Click += new System.EventHandler(this.labelRegimen_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(209, 152);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(50, 13);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Reg Max";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // textBoxTolerancia
+            // 
+            this.textBoxTolerancia.Location = new System.Drawing.Point(96, 169);
+            this.textBoxTolerancia.Name = "textBoxTolerancia";
+            this.textBoxTolerancia.Size = new System.Drawing.Size(54, 20);
+            this.textBoxTolerancia.TabIndex = 14;
+            this.textBoxTolerancia.TextChanged += new System.EventHandler(this.textBox1_TextChanged_2);
+            // 
+            // tolerancia
+            // 
+            this.tolerancia.AutoSize = true;
+            this.tolerancia.Location = new System.Drawing.Point(93, 152);
+            this.tolerancia.Name = "tolerancia";
+            this.tolerancia.Size = new System.Drawing.Size(57, 13);
+            this.tolerancia.TabIndex = 4;
+            this.tolerancia.Text = "Tolerancia";
+            this.tolerancia.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Location = new System.Drawing.Point(6, 12);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(149, 123);
+            this.groupBox5.TabIndex = 18;
+            this.groupBox5.TabStop = false;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.checkBoxTopeBeta);
+            this.groupBox6.Controls.Add(this.labelTopeBeta);
+            this.groupBox6.Controls.Add(this.checkBoxTopeAlfa);
+            this.groupBox6.Controls.Add(this.labelTopeAlfa);
+            this.groupBox6.Location = new System.Drawing.Point(161, 12);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(270, 124);
+            this.groupBox6.TabIndex = 19;
+            this.groupBox6.TabStop = false;
+            // 
+            // checkBoxTopeBeta
+            // 
+            this.checkBoxTopeBeta.AutoSize = true;
+            this.checkBoxTopeBeta.Location = new System.Drawing.Point(156, 83);
+            this.checkBoxTopeBeta.Name = "checkBoxTopeBeta";
+            this.checkBoxTopeBeta.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxTopeBeta.TabIndex = 23;
+            this.checkBoxTopeBeta.UseVisualStyleBackColor = true;
+            this.checkBoxTopeBeta.CheckedChanged += new System.EventHandler(this.checkBoxTopeBeta_CheckedChanged);
+            // 
+            // labelTopeBeta
+            // 
+            this.labelTopeBeta.AutoSize = true;
+            this.labelTopeBeta.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelTopeBeta.Location = new System.Drawing.Point(176, 83);
+            this.labelTopeBeta.Name = "labelTopeBeta";
+            this.labelTopeBeta.Size = new System.Drawing.Size(76, 13);
+            this.labelTopeBeta.TabIndex = 22;
+            this.labelTopeBeta.Text = "labelTopeBeta";
+            // 
+            // checkBoxTopeAlfa
+            // 
+            this.checkBoxTopeAlfa.AutoSize = true;
+            this.checkBoxTopeAlfa.Location = new System.Drawing.Point(157, 51);
+            this.checkBoxTopeAlfa.Name = "checkBoxTopeAlfa";
+            this.checkBoxTopeAlfa.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxTopeAlfa.TabIndex = 19;
+            this.checkBoxTopeAlfa.UseVisualStyleBackColor = true;
+            this.checkBoxTopeAlfa.CheckedChanged += new System.EventHandler(this.checkBoxTopeAlfa_CheckedChanged);
+            // 
+            // labelTopeAlfa
+            // 
+            this.labelTopeAlfa.AutoSize = true;
+            this.labelTopeAlfa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelTopeAlfa.Location = new System.Drawing.Point(180, 51);
+            this.labelTopeAlfa.Name = "labelTopeAlfa";
+            this.labelTopeAlfa.Size = new System.Drawing.Size(72, 13);
+            this.labelTopeAlfa.TabIndex = 21;
+            this.labelTopeAlfa.Text = "labelTopeAlfa";
+            // 
+            // textBoxVelocidad
+            // 
+            this.textBoxVelocidad.Location = new System.Drawing.Point(479, 210);
+            this.textBoxVelocidad.Name = "textBoxVelocidad";
+            this.textBoxVelocidad.Size = new System.Drawing.Size(77, 20);
+            this.textBoxVelocidad.TabIndex = 9;
+            this.textBoxVelocidad.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
+            // 
+            // chb_simulacion_alfa
+            // 
+            this.chb_simulacion_alfa.AutoSize = true;
+            this.chb_simulacion_alfa.Location = new System.Drawing.Point(479, 174);
+            this.chb_simulacion_alfa.Name = "chb_simulacion_alfa";
+            this.chb_simulacion_alfa.Size = new System.Drawing.Size(44, 17);
+            this.chb_simulacion_alfa.TabIndex = 7;
+            this.chb_simulacion_alfa.Text = "Alfa";
+            this.chb_simulacion_alfa.UseVisualStyleBackColor = true;
+            this.chb_simulacion_alfa.CheckedChanged += new System.EventHandler(this.chb_simulacion_CheckedChanged);
+            // 
+            // Velocidad
+            // 
+            this.Velocidad.AutoSize = true;
+            this.Velocidad.Location = new System.Drawing.Point(474, 194);
+            this.Velocidad.Name = "Velocidad";
+            this.Velocidad.Size = new System.Drawing.Size(54, 13);
+            this.Velocidad.TabIndex = 4;
+            this.Velocidad.Text = "Velocidad";
+            this.Velocidad.Click += new System.EventHandler(this.label1_Click);
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.mandarComando);
             this.groupBox3.Controls.Add(this.CommandBox);
+            this.groupBox3.Controls.Add(this.labelComms);
             this.groupBox3.Controls.Add(this.LabelGFeedback);
             this.groupBox3.Location = new System.Drawing.Point(15, 363);
             this.groupBox3.Name = "groupBox3";
@@ -436,14 +555,23 @@ namespace Sample01
             this.CommandBox.TabIndex = 12;
             this.CommandBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
+            // labelComms
+            // 
+            this.labelComms.Location = new System.Drawing.Point(7, 16);
+            this.labelComms.Name = "labelComms";
+            this.labelComms.Size = new System.Drawing.Size(174, 26);
+            this.labelComms.TabIndex = 14;
+            this.labelComms.Text = "labelComms";
+            this.labelComms.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // LabelGFeedback
             // 
-            this.LabelGFeedback.AutoSize = true;
-            this.LabelGFeedback.Location = new System.Drawing.Point(7, 27);
+            this.LabelGFeedback.Location = new System.Drawing.Point(7, 46);
             this.LabelGFeedback.Name = "LabelGFeedback";
-            this.LabelGFeedback.Size = new System.Drawing.Size(55, 13);
+            this.LabelGFeedback.Size = new System.Drawing.Size(174, 22);
             this.LabelGFeedback.TabIndex = 8;
             this.LabelGFeedback.Text = "Feedback";
+            this.LabelGFeedback.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LabelGFeedback.Click += new System.EventHandler(this.label6_Click);
             // 
             // BotonParada
@@ -468,15 +596,89 @@ namespace Sample01
             this.BotonArranque.UseVisualStyleBackColor = false;
             this.BotonArranque.Click += new System.EventHandler(this.BotonArranque_Click);
             // 
+            // labelParada
+            // 
+            this.labelParada.Location = new System.Drawing.Point(296, 15);
+            this.labelParada.Name = "labelParada";
+            this.labelParada.Size = new System.Drawing.Size(174, 26);
+            this.labelParada.TabIndex = 13;
+            this.labelParada.Text = "labelParada";
+            this.labelParada.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelParada.Click += new System.EventHandler(this.labelParada_Click);
+            // 
+            // chb_simulacion_beta
+            // 
+            this.chb_simulacion_beta.AutoSize = true;
+            this.chb_simulacion_beta.Location = new System.Drawing.Point(529, 174);
+            this.chb_simulacion_beta.Name = "chb_simulacion_beta";
+            this.chb_simulacion_beta.Size = new System.Drawing.Size(48, 17);
+            this.chb_simulacion_beta.TabIndex = 15;
+            this.chb_simulacion_beta.Text = "Beta";
+            this.chb_simulacion_beta.UseVisualStyleBackColor = true;
+            this.chb_simulacion_beta.CheckedChanged += new System.EventHandler(this.chb_simulacion_beta_CheckedChanged);
+            // 
+            // labelErrorObjetivo
+            // 
+            this.labelErrorObjetivo.Location = new System.Drawing.Point(294, 101);
+            this.labelErrorObjetivo.Name = "labelErrorObjetivo";
+            this.labelErrorObjetivo.Size = new System.Drawing.Size(174, 26);
+            this.labelErrorObjetivo.TabIndex = 16;
+            this.labelErrorObjetivo.Text = "labelErrorObjetivo";
+            this.labelErrorObjetivo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.labelVelSim);
+            this.groupBox4.Location = new System.Drawing.Point(460, 154);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(133, 203);
+            this.groupBox4.TabIndex = 17;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Simulacion";
+            // 
+            // labelVelSim
+            // 
+            this.labelVelSim.AutoSize = true;
+            this.labelVelSim.Location = new System.Drawing.Point(68, 40);
+            this.labelVelSim.Name = "labelVelSim";
+            this.labelVelSim.Size = new System.Drawing.Size(74, 13);
+            this.labelVelSim.TabIndex = 5;
+            this.labelVelSim.Text = "Velocidad Sim";
+            // 
+            // labelEnObjetivo
+            // 
+            this.labelEnObjetivo.Location = new System.Drawing.Point(296, 43);
+            this.labelEnObjetivo.Name = "labelEnObjetivo";
+            this.labelEnObjetivo.Size = new System.Drawing.Size(174, 26);
+            this.labelEnObjetivo.TabIndex = 18;
+            this.labelEnObjetivo.Text = "labelEnObjetivo";
+            this.labelEnObjetivo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxRegMax
+            // 
+            this.textBoxRegMax.Location = new System.Drawing.Point(212, 169);
+            this.textBoxRegMax.Name = "textBoxRegMax";
+            this.textBoxRegMax.Size = new System.Drawing.Size(77, 20);
+            this.textBoxRegMax.TabIndex = 10;
+            this.textBoxRegMax.TextChanged += new System.EventHandler(this.textBoxRegMax_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(367, 466);
+            this.ClientSize = new System.Drawing.Size(660, 466);
+            this.Controls.Add(this.labelEnObjetivo);
+            this.Controls.Add(this.labelErrorObjetivo);
+            this.Controls.Add(this.chb_simulacion_beta);
+            this.Controls.Add(this.labelParada);
             this.Controls.Add(this.BotonArranque);
+            this.Controls.Add(this.textBoxVelocidad);
             this.Controls.Add(this.BotonParada);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.chb_simulacion_alfa);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.Velocidad);
+            this.Controls.Add(this.groupBox4);
             this.Name = "Form1";
             this.Text = "SCARAFITTI CONTROL";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form1_Closing);
@@ -484,9 +686,14 @@ namespace Sample01
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion
@@ -515,15 +722,25 @@ namespace Sample01
                 hVarSimY = tcClient.CreateVariableHandle("GVL.Yc");
                 hVarVelocidad = tcClient.CreateVariableHandle("Simulacion.vel");
                 hVarTolerancia = tcClient.CreateVariableHandle("GVL.deadband_angulo");
-                hVarSimulacion = tcClient.CreateVariableHandle("GVL.simulacion");
-                hVarParada = tcClient.CreateVariableHandle("GVL.parada");
-                hVarEnObjetivo = tcClient.CreateVariableHandle("GVL.en_objetivo");
-                hVarError = tcClient.CreateVariableHandle("GVL.error");
+                hVarSimulacion_alfa = tcClient.CreateVariableHandle("GVL.Scarafitti.simulacion_alfa");
+                hVarSimulacion_beta = tcClient.CreateVariableHandle("GVL.Scarafitti.simulacion_beta");
+                hVarParada = tcClient.CreateVariableHandle("GVL.Scarafitti.parada");
+                hVarEnObjetivo = tcClient.CreateVariableHandle("GVL.Scarafitti.en_objetivo");
+                hVarQuieto = tcClient.CreateVariableHandle("GVL.Scarafitti.quieto");
+                hVarError = tcClient.CreateVariableHandle("GVL.Scarafitti.error_objetivo");
                 hVarAlfa = tcClient.CreateVariableHandle("IO.alfa_deg");
                 hVarBeta = tcClient.CreateVariableHandle("IO.beta_deg");
                 hVarStringCommand = tcClient.CreateVariableHandle("IO.string_in");
                 hVarStringFeedback = tcClient.CreateVariableHandle("IO.string_out");
-                hVarRegimen = tcClient.CreateVariableHandle("GVL.regimen_maximo");
+                hVarRegimenMax = tcClient.CreateVariableHandle("GVL.regimen_maximo");
+                hVarCommsStatus = tcClient.CreateVariableHandle("GVL.Scarafitti.ADSCOM_ready");
+                hVarRegimenAlfa = tcClient.CreateVariableHandle("GVL.Cilindro1.regimen");
+                hVarRegimenBeta = tcClient.CreateVariableHandle("GVL.Cilindro2.regimen");
+                hVarTopeAlfa = tcClient.CreateVariableHandle("IO.tope_alfa");
+                hVarTopeBeta = tcClient.CreateVariableHandle("IO.tope_beta");
+
+
+
 
             }
             catch (Exception err)
@@ -563,7 +780,37 @@ namespace Sample01
 
         }
 
+        private void checkBoxTopeBeta_CheckedChanged(object sender, EventArgs e)
+        {
+            tcClient.WriteAny(hVarTopeBeta, checkBoxTopeBeta.Checked);
+        }
+
+        private void textBoxRegMax_TextChanged(object sender, EventArgs e)
+        {
+            tcClient.WriteAny(hVarRegimenMax, Convert.ToSingle(textBoxRegMax.Text));
+        }
+
+        private void label6_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxTopeAlfa_CheckedChanged(object sender, EventArgs e)
+        {
+            tcClient.WriteAny(hVarTopeAlfa, checkBoxTopeAlfa.Checked);
+        }
+
+        private void chb_simulacion_beta_CheckedChanged(object sender, EventArgs e)
+        {
+            tcClient.WriteAny(hVarSimulacion_beta, chb_simulacion_beta.Checked);
+        }
+
         private void textBox1_TextChanged_3(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelParada_Click(object sender, EventArgs e)
         {
 
         }
@@ -580,7 +827,7 @@ namespace Sample01
 
         private void chb_simulacion_CheckedChanged(object sender, EventArgs e)
         {
-            tcClient.WriteAny(hVarSimulacion, chb_simulacion.Checked);
+            tcClient.WriteAny(hVarSimulacion_alfa, chb_simulacion_alfa.Checked);
 
         }
 
@@ -664,40 +911,103 @@ namespace Sample01
             //mostrar alfa
             tcClient.Read(hVarAlfa, dataStream);
             dataStream.Position = 0;
-            labelAlfa.Text = "alfa = " + binRead.ReadSingle().ToString("0.00") + "deg";
+            labelAlfa.Text = binRead.ReadSingle().ToString("0.0") + "deg";
             //mostrar beta
             tcClient.Read(hVarBeta, dataStream);
             dataStream.Position = 0;
-            labelBeta.Text = "beta = " + binRead.ReadSingle().ToString("0.00") + "deg";
-            //mostrar regimen
-            tcClient.Read(hVarRegimen, dataStream);
+            labelBeta.Text = binRead.ReadSingle().ToString("0.0") + "deg";
+            //mostrar regimen maximo
+            tcClient.Read(hVarRegimenMax, dataStream);
             dataStream.Position = 0;
-            labelRegimen.Text = binRead.ReadInt32().ToString();
+            labelRegimen.Text = binRead.ReadSingle().ToString("0") + "%";
+            labelRegimen.Refresh();
+            //mostrar velocidad sim
+            tcClient.Read(hVarVelocidad, dataStream);
+            dataStream.Position = 0;
+            labelVelSim.Text = binRead.ReadSingle().ToString();
+            labelVelSim.Refresh();
+            //mostrar regimenalfa
+            tcClient.Read(hVarRegimenAlfa, dataStream);
+            dataStream.Position = 0;
+            labelRegimenAlfa.Text = binRead.ReadSingle().ToString("0") + "%";
+            labelRegimenAlfa.Refresh();
+            //mostrar regimenbeta
+            tcClient.Read(hVarRegimenBeta, dataStream);
+            dataStream.Position = 0;
+            labelRegimenBeta.Text = binRead.ReadSingle().ToString("0") + "%";
 
-            //mostrar ERROR
-            tcClient.Read(hVarError, dataStream);
-            dataStream.Position = 0;
-            if ((binRead.ReadInt32().Equals(1078460417)))
-                { LabelError.Text = "Error";
-                LabelError.BackColor = Color.Red;
+
+
+            //mostrar PARADA/MARCHA
+            tcClient.Read(hVarParada, dataStream);
+            dataStream.Position = 0;          
+            if (binRead.ReadBoolean())
+            {
+                labelParada.Text = "PARO";
+                labelParada.BackColor = Color.LightSalmon;
 
             }
             else
             {
-                LabelError.Text = "No Error";
-                LabelError.BackColor = Color.Green;
+                labelParada.Text = "MARCHA";
+                labelParada.BackColor = Color.LightGreen;
             }
-                
-            LabelError.Text = Convert.ToString(binRead.ReadInt32().Equals(1078460417));
+            labelParada.Refresh();
 
-            LabelError.Refresh();
+            //mostrar COMMS STATUS
+            tcClient.Read(hVarCommsStatus, dataStream);
+            dataStream.Position = 0;
+            if (binRead.ReadBoolean())
+            {
+                labelComms.Text = "ADSCOM READY";
+                labelComms.BackColor = Color.LightBlue;
+
+            }
+            else
+            {
+                labelComms.Text = "ADSCOM NOT READY";
+                labelComms.BackColor = Color.LightGray;
+            }
+            labelComms.Refresh();
+
+            //mostrar ERROR OBJETIVO
+            tcClient.Read(hVarError, dataStream);
+            dataStream.Position = 0;
+            if (binRead.ReadBoolean())
+            {
+                labelErrorObjetivo.Text = "ERROR OBJETIVO";
+                labelErrorObjetivo.BackColor = Color.LightSalmon;
+
+            }
+            else
+            {
+                labelErrorObjetivo.Text = "";
+                labelErrorObjetivo.BackColor = Color.LightGray;
+            }
+            labelErrorObjetivo.Refresh();
+
+            //mostrar EN OBJETIVO
+            tcClient.Read(hVarEnObjetivo, dataStream);
+            dataStream.Position = 0;
+            if (binRead.ReadBoolean())
+            {
+                labelEnObjetivo.Text = "EN OBJETIVO";
+                labelEnObjetivo.BackColor = Color.LightGreen;
+
+            }
+            else
+            {
+                labelEnObjetivo.Text = "MOVIENDO";
+                labelEnObjetivo.BackColor = Color.LightGoldenrodYellow;
+            }
+            labelEnObjetivo.Refresh();
+
 
             //GCode listen
             string str = tcClient.ReadAnyString(hVarStringFeedback, 80, Encoding.Default);
             LabelGFeedback.Text = str;
             LabelGFeedback.Refresh();
 
-            EnObjetivo.Text = Convert.ToString(hVarEnObjetivo);
 
 
 
@@ -787,7 +1097,8 @@ namespace Sample01
                 tcClient.DeleteVariableHandle(hVarSimY);
                 tcClient.DeleteVariableHandle(hVarVelocidad );
                 tcClient.DeleteVariableHandle(hVarTolerancia);
-                tcClient.DeleteVariableHandle(hVarSimulacion);
+                tcClient.DeleteVariableHandle(hVarSimulacion_alfa);
+                tcClient.DeleteVariableHandle(hVarSimulacion_beta);
                 tcClient.DeleteVariableHandle(hVarParada );
                 tcClient.DeleteVariableHandle(hVarEnObjetivo);
                 tcClient.DeleteVariableHandle(hVarError );
@@ -795,7 +1106,7 @@ namespace Sample01
                 tcClient.DeleteVariableHandle(hVarBeta );
                 tcClient.DeleteVariableHandle(hVarStringCommand);
                 tcClient.DeleteVariableHandle(hVarStringFeedback);
-                tcClient.DeleteVariableHandle(hVarRegimen);
+                tcClient.DeleteVariableHandle(hVarRegimenMax);
                 
 
             }

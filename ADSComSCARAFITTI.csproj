@@ -7,8 +7,7 @@
     <ProjectGuid>{E85C2DF3-CC74-42F7-AE25-1C1AFAE797E1}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>14096627311555931405.ico</ApplicationIcon>
     <AssemblyKeyContainerName />
     <AssemblyName>ADSComSFACAFITTI</AssemblyName>
     <AssemblyOriginatorKeyFile />
@@ -126,6 +125,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="14096627311555931405.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
