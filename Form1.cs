@@ -32,10 +32,6 @@ namespace Sample01
         private Label labelBeta;
         private Timer timer1;
         private GroupBox groupBox1;
-        private Button btnYplus;
-        private Button btnXplus;
-        private Button btnXminus;
-        private Button btnYminus;
         private GroupBox groupBox2;
         private CheckBox chb_simulacion_alfa;
         private Label Velocidad;
@@ -71,6 +67,9 @@ namespace Sample01
         private CheckBox checkBoxTopeBeta;
         private CheckBox checkBoxTopeAlfa;
         private TextBox textBoxRegMax;
+        private Button buttonPreset0;
+        private Button buttonPreset1;
+        private Label labelTolerancia;
         private TcAdsClient tcClient;
 	
 		public Form1()
@@ -112,11 +111,8 @@ namespace Sample01
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.BotonReset = new System.Windows.Forms.Button();
-            this.btnYminus = new System.Windows.Forms.Button();
-            this.btnYplus = new System.Windows.Forms.Button();
-            this.btnXminus = new System.Windows.Forms.Button();
-            this.btnXplus = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxRegMax = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.labelRegimenBeta = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -149,7 +145,9 @@ namespace Sample01
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.labelVelSim = new System.Windows.Forms.Label();
             this.labelEnObjetivo = new System.Windows.Forms.Label();
-            this.textBoxRegMax = new System.Windows.Forms.TextBox();
+            this.buttonPreset1 = new System.Windows.Forms.Button();
+            this.buttonPreset0 = new System.Windows.Forms.Button();
+            this.labelTolerancia = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -247,22 +245,19 @@ namespace Sample01
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.BotonReset);
-            this.groupBox1.Controls.Add(this.btnYminus);
-            this.groupBox1.Controls.Add(this.btnYplus);
-            this.groupBox1.Controls.Add(this.btnXminus);
-            this.groupBox1.Controls.Add(this.btnXplus);
+            this.groupBox1.Controls.Add(this.buttonPreset0);
+            this.groupBox1.Controls.Add(this.buttonPreset1);
             this.groupBox1.Location = new System.Drawing.Point(15, 9);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(200, 136);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Control";
+            this.groupBox1.Text = "Presets";
             // 
             // BotonReset
             // 
             this.BotonReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.BotonReset.Location = new System.Drawing.Point(72, 50);
+            this.BotonReset.Location = new System.Drawing.Point(265, 59);
             this.BotonReset.Name = "BotonReset";
             this.BotonReset.Size = new System.Drawing.Size(54, 32);
             this.BotonReset.TabIndex = 3;
@@ -270,44 +265,9 @@ namespace Sample01
             this.BotonReset.UseVisualStyleBackColor = false;
             this.BotonReset.Click += new System.EventHandler(this.BotonReset_Click);
             // 
-            // btnYminus
-            // 
-            this.btnYminus.Location = new System.Drawing.Point(72, 91);
-            this.btnYminus.Name = "btnYminus";
-            this.btnYminus.Size = new System.Drawing.Size(54, 23);
-            this.btnYminus.TabIndex = 2;
-            this.btnYminus.Text = "Y-";
-            this.btnYminus.Click += new System.EventHandler(this.Yminus_Click);
-            // 
-            // btnYplus
-            // 
-            this.btnYplus.Location = new System.Drawing.Point(72, 19);
-            this.btnYplus.Name = "btnYplus";
-            this.btnYplus.Size = new System.Drawing.Size(54, 23);
-            this.btnYplus.TabIndex = 1;
-            this.btnYplus.Text = "Y+";
-            this.btnYplus.Click += new System.EventHandler(this.Yplus_Click);
-            // 
-            // btnXminus
-            // 
-            this.btnXminus.Location = new System.Drawing.Point(23, 54);
-            this.btnXminus.Name = "btnXminus";
-            this.btnXminus.Size = new System.Drawing.Size(39, 23);
-            this.btnXminus.TabIndex = 1;
-            this.btnXminus.Text = "X-";
-            this.btnXminus.Click += new System.EventHandler(this.Xminus_Click);
-            // 
-            // btnXplus
-            // 
-            this.btnXplus.Location = new System.Drawing.Point(138, 54);
-            this.btnXplus.Name = "btnXplus";
-            this.btnXplus.Size = new System.Drawing.Size(37, 23);
-            this.btnXplus.TabIndex = 1;
-            this.btnXplus.Text = "X+";
-            this.btnXplus.Click += new System.EventHandler(this.Xplus_Click);
-            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.labelTolerancia);
             this.groupBox2.Controls.Add(this.textBoxRegMax);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.labelRegimenBeta);
@@ -335,6 +295,14 @@ namespace Sample01
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Posición";
+            // 
+            // textBoxRegMax
+            // 
+            this.textBoxRegMax.Location = new System.Drawing.Point(212, 169);
+            this.textBoxRegMax.Name = "textBoxRegMax";
+            this.textBoxRegMax.Size = new System.Drawing.Size(77, 20);
+            this.textBoxRegMax.TabIndex = 10;
+            this.textBoxRegMax.TextChanged += new System.EventHandler(this.textBoxRegMax_TextChanged);
             // 
             // label6
             // 
@@ -526,22 +494,23 @@ namespace Sample01
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.BotonReset);
             this.groupBox3.Controls.Add(this.mandarComando);
             this.groupBox3.Controls.Add(this.CommandBox);
             this.groupBox3.Controls.Add(this.labelComms);
             this.groupBox3.Controls.Add(this.LabelGFeedback);
             this.groupBox3.Location = new System.Drawing.Point(15, 363);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(316, 100);
+            this.groupBox3.Size = new System.Drawing.Size(332, 100);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "G-Code";
             // 
             // mandarComando
             // 
-            this.mandarComando.Location = new System.Drawing.Point(206, 71);
+            this.mandarComando.Location = new System.Drawing.Point(206, 59);
             this.mandarComando.Name = "mandarComando";
-            this.mandarComando.Size = new System.Drawing.Size(53, 20);
+            this.mandarComando.Size = new System.Drawing.Size(53, 32);
             this.mandarComando.TabIndex = 13;
             this.mandarComando.Text = "Send";
             this.mandarComando.UseVisualStyleBackColor = true;
@@ -557,12 +526,13 @@ namespace Sample01
             // 
             // labelComms
             // 
-            this.labelComms.Location = new System.Drawing.Point(7, 16);
+            this.labelComms.Location = new System.Drawing.Point(10, 16);
             this.labelComms.Name = "labelComms";
-            this.labelComms.Size = new System.Drawing.Size(174, 26);
+            this.labelComms.Size = new System.Drawing.Size(309, 26);
             this.labelComms.TabIndex = 14;
             this.labelComms.Text = "labelComms";
             this.labelComms.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelComms.Click += new System.EventHandler(this.labelComms_Click);
             // 
             // LabelGFeedback
             // 
@@ -654,13 +624,34 @@ namespace Sample01
             this.labelEnObjetivo.Text = "labelEnObjetivo";
             this.labelEnObjetivo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBoxRegMax
+            // buttonPreset1
             // 
-            this.textBoxRegMax.Location = new System.Drawing.Point(212, 169);
-            this.textBoxRegMax.Name = "textBoxRegMax";
-            this.textBoxRegMax.Size = new System.Drawing.Size(77, 20);
-            this.textBoxRegMax.TabIndex = 10;
-            this.textBoxRegMax.TextChanged += new System.EventHandler(this.textBoxRegMax_TextChanged);
+            this.buttonPreset1.Location = new System.Drawing.Point(81, 12);
+            this.buttonPreset1.Name = "buttonPreset1";
+            this.buttonPreset1.Size = new System.Drawing.Size(54, 48);
+            this.buttonPreset1.TabIndex = 19;
+            this.buttonPreset1.Text = "0,2300";
+            this.buttonPreset1.UseVisualStyleBackColor = true;
+            this.buttonPreset1.Click += new System.EventHandler(this.buttonPreset1_Click);
+            // 
+            // buttonPreset0
+            // 
+            this.buttonPreset0.Location = new System.Drawing.Point(81, 74);
+            this.buttonPreset0.Name = "buttonPreset0";
+            this.buttonPreset0.Size = new System.Drawing.Size(54, 44);
+            this.buttonPreset0.TabIndex = 20;
+            this.buttonPreset0.Text = "0,0";
+            this.buttonPreset0.UseVisualStyleBackColor = true;
+            this.buttonPreset0.Click += new System.EventHandler(this.buttonPreset0_Click);
+            // 
+            // labelTolerancia
+            // 
+            this.labelTolerancia.AutoSize = true;
+            this.labelTolerancia.Location = new System.Drawing.Point(146, 152);
+            this.labelTolerancia.Name = "labelTolerancia";
+            this.labelTolerancia.Size = new System.Drawing.Size(57, 13);
+            this.labelTolerancia.TabIndex = 21;
+            this.labelTolerancia.Text = "Tolerancia";
             // 
             // Form1
             // 
@@ -679,6 +670,7 @@ namespace Sample01
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Velocidad);
             this.Controls.Add(this.groupBox4);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "SCARAFITTI CONTROL";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form1_Closing);
@@ -707,7 +699,21 @@ namespace Sample01
 			Application.Run(new Form1());
 		}
 
-		private void Form1_Load(object sender, System.EventArgs e)
+        /// <summary>
+        /// atajos con teclas, no funciona
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void atajos_teclas(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.R)
+            {
+                tcClient.WriteAnyString(hVarStringCommand, "reset", 80, System.Text.Encoding.Default);
+            }
+        }
+
+
+        private void Form1_Load(object sender, System.EventArgs e)
 		{
 			tcClient = new TcAdsClient();
 			tcClient.Connect("5.72.137.238.1.1",851);
@@ -788,6 +794,21 @@ namespace Sample01
         private void textBoxRegMax_TextChanged(object sender, EventArgs e)
         {
             tcClient.WriteAny(hVarRegimenMax, Convert.ToSingle(textBoxRegMax.Text));
+        }
+
+        private void labelComms_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonPreset0_Click(object sender, EventArgs e)
+        {
+            tcClient.WriteAnyString(hVarStringCommand, "G00 X0 Y0", 80, System.Text.Encoding.Default);
+        }
+
+        private void buttonPreset1_Click(object sender, EventArgs e)
+        {
+            tcClient.WriteAnyString(hVarStringCommand, "G00 X0 Y2300", 80, System.Text.Encoding.Default);
         }
 
         private void label6_Click_1(object sender, EventArgs e)
@@ -911,7 +932,7 @@ namespace Sample01
             //mostrar alfa
             tcClient.Read(hVarAlfa, dataStream);
             dataStream.Position = 0;
-            labelAlfa.Text = binRead.ReadSingle().ToString("0.0") + "deg";
+            labelAlfa.Text = (180-binRead.ReadSingle()).ToString("0.0") + "deg";
             //mostrar beta
             tcClient.Read(hVarBeta, dataStream);
             dataStream.Position = 0;
@@ -921,6 +942,11 @@ namespace Sample01
             dataStream.Position = 0;
             labelRegimen.Text = binRead.ReadSingle().ToString("0") + "%";
             labelRegimen.Refresh();
+            //mostrar tolerancia
+            tcClient.Read(hVarTolerancia, dataStream);
+            dataStream.Position = 0;
+            labelTolerancia.Text = binRead.ReadSingle().ToString();
+            labelTolerancia.Refresh();
             //mostrar velocidad sim
             tcClient.Read(hVarVelocidad, dataStream);
             dataStream.Position = 0;
@@ -961,12 +987,14 @@ namespace Sample01
             {
                 labelComms.Text = "ADSCOM READY";
                 labelComms.BackColor = Color.LightBlue;
+                groupBox3.BackColor = Color.LightBlue;
 
             }
             else
             {
                 labelComms.Text = "ADSCOM NOT READY";
                 labelComms.BackColor = Color.LightGray;
+                groupBox3.BackColor = Color.LightGray;
             }
             labelComms.Refresh();
 
