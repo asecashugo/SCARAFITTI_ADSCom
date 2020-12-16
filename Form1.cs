@@ -20,8 +20,13 @@ namespace Sample01
         private IContainer components;
         private int hVarX, hVarY, auxX, auxY, hVarRealX, hVarRealY, hVarSimX, hVarSimY, hVarVelocidad, hVarTolerancia;
         private int hVarSimulacion_alfa, hVarSimulacion_beta, hVarParada, hVarEnObjetivo, hVarError, hVarAlfa, hVarBeta,hVarRegimenMax, hVarQuieto, hVarCommsStatus;
-        private int hVarRegimenAlfa, hVarRegimenBeta, hVarTopeAlfa, hVarTopeBeta;
+        private int hVarRegimenAlfa, hVarRegimenBeta, hVarTopeAlfa, hVarTopeBeta, total_lines;
+        private int current_line = 1;
         private int hVarStringCommand, hVarStringFeedback;
+        private string fileContent = "empty";
+        private string filePath = "empty";
+        private string ADSNetID;
+        private bool BoolCommsStatus, BoolRunFile;
         private Label objetivoY;
         private Label objetivoX;
         private Label label3;
@@ -70,6 +75,16 @@ namespace Sample01
         private Button buttonPreset0;
         private Button buttonPreset1;
         private Label labelTolerancia;
+        private Label labelADSStatus;
+        private Label labelADSLocalRemote;
+        private GroupBox groupBoxGFile;
+        private Button buttonOpenFile;
+        private Label labelFileName;
+        private Label labelFileLines;
+        private Button buttonSendFileLine;
+        private ProgressBar progressBarFile;
+        private Label labelLineaActual;
+        private Button buttonEnviarTodo;
         private TcAdsClient tcClient;
 	
 		public Form1()
@@ -110,8 +125,11 @@ namespace Sample01
             this.labelBeta = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonPreset0 = new System.Windows.Forms.Button();
+            this.buttonPreset1 = new System.Windows.Forms.Button();
             this.BotonReset = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelTolerancia = new System.Windows.Forms.Label();
             this.textBoxRegMax = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.labelRegimenBeta = new System.Windows.Forms.Label();
@@ -145,14 +163,22 @@ namespace Sample01
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.labelVelSim = new System.Windows.Forms.Label();
             this.labelEnObjetivo = new System.Windows.Forms.Label();
-            this.buttonPreset1 = new System.Windows.Forms.Button();
-            this.buttonPreset0 = new System.Windows.Forms.Button();
-            this.labelTolerancia = new System.Windows.Forms.Label();
+            this.labelADSStatus = new System.Windows.Forms.Label();
+            this.labelADSLocalRemote = new System.Windows.Forms.Label();
+            this.groupBoxGFile = new System.Windows.Forms.GroupBox();
+            this.buttonOpenFile = new System.Windows.Forms.Button();
+            this.labelFileName = new System.Windows.Forms.Label();
+            this.labelFileLines = new System.Windows.Forms.Label();
+            this.buttonSendFileLine = new System.Windows.Forms.Button();
+            this.progressBarFile = new System.Windows.Forms.ProgressBar();
+            this.labelLineaActual = new System.Windows.Forms.Label();
+            this.buttonEnviarTodo = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBoxGFile.SuspendLayout();
             this.SuspendLayout();
             // 
             // objetivoY
@@ -240,7 +266,6 @@ namespace Sample01
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // groupBox1
@@ -253,6 +278,26 @@ namespace Sample01
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Presets";
+            // 
+            // buttonPreset0
+            // 
+            this.buttonPreset0.Location = new System.Drawing.Point(81, 74);
+            this.buttonPreset0.Name = "buttonPreset0";
+            this.buttonPreset0.Size = new System.Drawing.Size(54, 44);
+            this.buttonPreset0.TabIndex = 20;
+            this.buttonPreset0.Text = "0,0";
+            this.buttonPreset0.UseVisualStyleBackColor = true;
+            this.buttonPreset0.Click += new System.EventHandler(this.buttonPreset0_Click);
+            // 
+            // buttonPreset1
+            // 
+            this.buttonPreset1.Location = new System.Drawing.Point(81, 12);
+            this.buttonPreset1.Name = "buttonPreset1";
+            this.buttonPreset1.Size = new System.Drawing.Size(54, 48);
+            this.buttonPreset1.TabIndex = 19;
+            this.buttonPreset1.Text = "0,2300";
+            this.buttonPreset1.UseVisualStyleBackColor = true;
+            this.buttonPreset1.Click += new System.EventHandler(this.buttonPreset1_Click);
             // 
             // BotonReset
             // 
@@ -295,6 +340,15 @@ namespace Sample01
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Posición";
+            // 
+            // labelTolerancia
+            // 
+            this.labelTolerancia.AutoSize = true;
+            this.labelTolerancia.Location = new System.Drawing.Point(146, 152);
+            this.labelTolerancia.Name = "labelTolerancia";
+            this.labelTolerancia.Size = new System.Drawing.Size(57, 13);
+            this.labelTolerancia.TabIndex = 21;
+            this.labelTolerancia.Text = "Tolerancia";
             // 
             // textBoxRegMax
             // 
@@ -512,7 +566,7 @@ namespace Sample01
             this.mandarComando.Name = "mandarComando";
             this.mandarComando.Size = new System.Drawing.Size(53, 32);
             this.mandarComando.TabIndex = 13;
-            this.mandarComando.Text = "Send";
+            this.mandarComando.Text = "Enviar";
             this.mandarComando.UseVisualStyleBackColor = true;
             this.mandarComando.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -568,7 +622,7 @@ namespace Sample01
             // 
             // labelParada
             // 
-            this.labelParada.Location = new System.Drawing.Point(296, 15);
+            this.labelParada.Location = new System.Drawing.Point(294, 70);
             this.labelParada.Name = "labelParada";
             this.labelParada.Size = new System.Drawing.Size(174, 26);
             this.labelParada.TabIndex = 13;
@@ -589,7 +643,7 @@ namespace Sample01
             // 
             // labelErrorObjetivo
             // 
-            this.labelErrorObjetivo.Location = new System.Drawing.Point(294, 101);
+            this.labelErrorObjetivo.Location = new System.Drawing.Point(294, 123);
             this.labelErrorObjetivo.Name = "labelErrorObjetivo";
             this.labelErrorObjetivo.Size = new System.Drawing.Size(174, 26);
             this.labelErrorObjetivo.TabIndex = 16;
@@ -617,46 +671,120 @@ namespace Sample01
             // 
             // labelEnObjetivo
             // 
-            this.labelEnObjetivo.Location = new System.Drawing.Point(296, 43);
+            this.labelEnObjetivo.Location = new System.Drawing.Point(294, 98);
             this.labelEnObjetivo.Name = "labelEnObjetivo";
             this.labelEnObjetivo.Size = new System.Drawing.Size(174, 26);
             this.labelEnObjetivo.TabIndex = 18;
             this.labelEnObjetivo.Text = "labelEnObjetivo";
             this.labelEnObjetivo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // buttonPreset1
+            // labelADSStatus
             // 
-            this.buttonPreset1.Location = new System.Drawing.Point(81, 12);
-            this.buttonPreset1.Name = "buttonPreset1";
-            this.buttonPreset1.Size = new System.Drawing.Size(54, 48);
-            this.buttonPreset1.TabIndex = 19;
-            this.buttonPreset1.Text = "0,2300";
-            this.buttonPreset1.UseVisualStyleBackColor = true;
-            this.buttonPreset1.Click += new System.EventHandler(this.buttonPreset1_Click);
+            this.labelADSStatus.Location = new System.Drawing.Point(294, 40);
+            this.labelADSStatus.Name = "labelADSStatus";
+            this.labelADSStatus.Size = new System.Drawing.Size(174, 26);
+            this.labelADSStatus.TabIndex = 19;
+            this.labelADSStatus.Text = "labelADSStatus";
+            this.labelADSStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelADSStatus.Click += new System.EventHandler(this.labelADSStatus_Click);
             // 
-            // buttonPreset0
+            // labelADSLocalRemote
             // 
-            this.buttonPreset0.Location = new System.Drawing.Point(81, 74);
-            this.buttonPreset0.Name = "buttonPreset0";
-            this.buttonPreset0.Size = new System.Drawing.Size(54, 44);
-            this.buttonPreset0.TabIndex = 20;
-            this.buttonPreset0.Text = "0,0";
-            this.buttonPreset0.UseVisualStyleBackColor = true;
-            this.buttonPreset0.Click += new System.EventHandler(this.buttonPreset0_Click);
+            this.labelADSLocalRemote.Location = new System.Drawing.Point(294, 15);
+            this.labelADSLocalRemote.Name = "labelADSLocalRemote";
+            this.labelADSLocalRemote.Size = new System.Drawing.Size(174, 26);
+            this.labelADSLocalRemote.TabIndex = 20;
+            this.labelADSLocalRemote.Text = "labelADSLocalRemote";
+            this.labelADSLocalRemote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelTolerancia
+            // groupBoxGFile
             // 
-            this.labelTolerancia.AutoSize = true;
-            this.labelTolerancia.Location = new System.Drawing.Point(146, 152);
-            this.labelTolerancia.Name = "labelTolerancia";
-            this.labelTolerancia.Size = new System.Drawing.Size(57, 13);
-            this.labelTolerancia.TabIndex = 21;
-            this.labelTolerancia.Text = "Tolerancia";
+            this.groupBoxGFile.Controls.Add(this.buttonEnviarTodo);
+            this.groupBoxGFile.Controls.Add(this.labelLineaActual);
+            this.groupBoxGFile.Controls.Add(this.progressBarFile);
+            this.groupBoxGFile.Controls.Add(this.buttonSendFileLine);
+            this.groupBoxGFile.Controls.Add(this.labelFileLines);
+            this.groupBoxGFile.Controls.Add(this.labelFileName);
+            this.groupBoxGFile.Controls.Add(this.buttonOpenFile);
+            this.groupBoxGFile.Location = new System.Drawing.Point(353, 363);
+            this.groupBoxGFile.Name = "groupBoxGFile";
+            this.groupBoxGFile.Size = new System.Drawing.Size(240, 125);
+            this.groupBoxGFile.TabIndex = 15;
+            this.groupBoxGFile.TabStop = false;
+            this.groupBoxGFile.Text = "G-File";
+            // 
+            // buttonOpenFile
+            // 
+            this.buttonOpenFile.Location = new System.Drawing.Point(9, 62);
+            this.buttonOpenFile.Name = "buttonOpenFile";
+            this.buttonOpenFile.Size = new System.Drawing.Size(53, 32);
+            this.buttonOpenFile.TabIndex = 15;
+            this.buttonOpenFile.Text = "Cargar";
+            this.buttonOpenFile.UseVisualStyleBackColor = true;
+            this.buttonOpenFile.Click += new System.EventHandler(this.buttonOpenFile_Click);
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.Location = new System.Drawing.Point(6, 16);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(228, 26);
+            this.labelFileName.TabIndex = 15;
+            this.labelFileName.Text = "label8";
+            this.labelFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelFileLines
+            // 
+            this.labelFileLines.Location = new System.Drawing.Point(6, 37);
+            this.labelFileLines.Name = "labelFileLines";
+            this.labelFileLines.Size = new System.Drawing.Size(109, 26);
+            this.labelFileLines.TabIndex = 16;
+            this.labelFileLines.Text = "labelFileLines";
+            this.labelFileLines.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // buttonSendFileLine
+            // 
+            this.buttonSendFileLine.Location = new System.Drawing.Point(68, 62);
+            this.buttonSendFileLine.Name = "buttonSendFileLine";
+            this.buttonSendFileLine.Size = new System.Drawing.Size(76, 32);
+            this.buttonSendFileLine.TabIndex = 17;
+            this.buttonSendFileLine.Text = "Enviar Linea";
+            this.buttonSendFileLine.UseVisualStyleBackColor = true;
+            this.buttonSendFileLine.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // progressBarFile
+            // 
+            this.progressBarFile.Location = new System.Drawing.Point(92, 40);
+            this.progressBarFile.Name = "progressBarFile";
+            this.progressBarFile.Size = new System.Drawing.Size(142, 15);
+            this.progressBarFile.TabIndex = 18;
+            this.progressBarFile.Click += new System.EventHandler(this.progressBar1_Click);
+            // 
+            // labelLineaActual
+            // 
+            this.labelLineaActual.Location = new System.Drawing.Point(6, 96);
+            this.labelLineaActual.Name = "labelLineaActual";
+            this.labelLineaActual.Size = new System.Drawing.Size(228, 26);
+            this.labelLineaActual.TabIndex = 19;
+            this.labelLineaActual.Text = "labelLineaActual";
+            this.labelLineaActual.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // buttonEnviarTodo
+            // 
+            this.buttonEnviarTodo.Location = new System.Drawing.Point(148, 62);
+            this.buttonEnviarTodo.Name = "buttonEnviarTodo";
+            this.buttonEnviarTodo.Size = new System.Drawing.Size(76, 32);
+            this.buttonEnviarTodo.TabIndex = 20;
+            this.buttonEnviarTodo.Text = "Enviar Todo";
+            this.buttonEnviarTodo.UseVisualStyleBackColor = true;
+            this.buttonEnviarTodo.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(660, 466);
+            this.ClientSize = new System.Drawing.Size(613, 500);
+            this.Controls.Add(this.groupBoxGFile);
+            this.Controls.Add(this.labelADSLocalRemote);
+            this.Controls.Add(this.labelADSStatus);
             this.Controls.Add(this.labelEnObjetivo);
             this.Controls.Add(this.labelErrorObjetivo);
             this.Controls.Add(this.chb_simulacion_beta);
@@ -684,6 +812,7 @@ namespace Sample01
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBoxGFile.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -712,16 +841,33 @@ namespace Sample01
             }
         }
 
+        private void Conectar_Local()
+        {
+            ADSNetID = "172.17.69.129.1.1";
+            //Conectar ADS client
+            tcClient = new TcAdsClient();
+            tcClient.Connect(ADSNetID, 851);
+        }
+        private void Conectar_Remoto()
+        {
+            ADSNetID = "5.72.137.238.1.1";
+            //Conectar ADS client
+            tcClient = new TcAdsClient();
+            tcClient.Connect(ADSNetID, 851);
+        }
 
-        private void Form1_Load(object sender, System.EventArgs e)
-		{
-			tcClient = new TcAdsClient();
-			tcClient.Connect("5.72.137.238.1.1",851);
-			
-			try
-			{
-				hVarX = tcClient.CreateVariableHandle("GVL.Xc_sp");
-				hVarY = tcClient.CreateVariableHandle("GVL.Yc_sp");
+        private string GetLine(string text, int lineNo)
+        {
+            string[] lines = text.Replace("\r", "").Split('\n');
+            return lines.Length >= lineNo ? lines[lineNo - 1] : null;
+        }
+
+        private void Crear_Handles()
+        {
+            try
+            {
+                hVarX = tcClient.CreateVariableHandle("GVL.Xc_sp");
+                hVarY = tcClient.CreateVariableHandle("GVL.Yc_sp");
                 hVarRealX = tcClient.CreateVariableHandle("GVL.Xc");
                 hVarRealY = tcClient.CreateVariableHandle("GVL.Yc");
                 hVarSimX = tcClient.CreateVariableHandle("GVL.Xc");
@@ -744,16 +890,30 @@ namespace Sample01
                 hVarRegimenBeta = tcClient.CreateVariableHandle("GVL.Cilindro2.regimen");
                 hVarTopeAlfa = tcClient.CreateVariableHandle("IO.tope_alfa");
                 hVarTopeBeta = tcClient.CreateVariableHandle("IO.tope_beta");
-
-
-
-
             }
             catch (Exception err)
-			{
-				MessageBox.Show(err.Message);
-			}
-		}
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+        private void Form1_Load(object sender, System.EventArgs e)
+		{
+            var confirmResult = MessageBox.Show("Conectar a remoto (Yes) o Local (No)?",
+                                     "Elegir configuración",
+                                     MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+               Conectar_Remoto();
+                Crear_Handles();
+                this.timer1.Enabled = true;
+            }
+            else
+            {
+                Conectar_Local();
+                Crear_Handles();
+                this.timer1.Enabled = true;
+            }
+        }
 
 
 
@@ -809,6 +969,64 @@ namespace Sample01
         private void buttonPreset1_Click(object sender, EventArgs e)
         {
             tcClient.WriteAnyString(hVarStringCommand, "G00 X0 Y2300", 80, System.Text.Encoding.Default);
+        }
+
+        private void labelADSStatus_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonOpenFile_Click(object sender, EventArgs e)
+        {
+
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    filePath = openFileDialog.FileName;
+
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        fileContent = reader.ReadToEnd();
+                    }
+                }
+            }
+
+            MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (current_line > total_lines)
+            {
+                BoolRunFile = false;
+                current_line = 1;
+                tcClient.WriteAnyString(hVarStringCommand, "RESET", 80, System.Text.Encoding.Default);
+            }
+            else { 
+            tcClient.WriteAnyString(hVarStringCommand, GetLine(fileContent,current_line), 80, System.Text.Encoding.Default);
+            current_line = current_line +1;
+            }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            BoolRunFile = true;
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void label6_Click_1(object sender, EventArgs e)
@@ -910,7 +1128,10 @@ namespace Sample01
         {
             AdsStream dataStream = new AdsStream(100 * 4);
             BinaryReader binRead = new BinaryReader(dataStream);
+            try
+            {
 
+            
             //mostrar realX
             tcClient.Read(hVarRealX, dataStream);
             dataStream.Position = 0;
@@ -971,31 +1192,43 @@ namespace Sample01
             {
                 labelParada.Text = "PARO";
                 labelParada.BackColor = Color.LightSalmon;
-
-            }
+                CommandBox.BackColor= Color.LightSalmon;
+                CommandBox.Enabled = false;
+                }
             else
             {
                 labelParada.Text = "MARCHA";
                 labelParada.BackColor = Color.LightGreen;
-            }
+                CommandBox.BackColor = Color.White;
+                CommandBox.Enabled = true;
+                }
             labelParada.Refresh();
 
             //mostrar COMMS STATUS
             tcClient.Read(hVarCommsStatus, dataStream);
             dataStream.Position = 0;
-            if (binRead.ReadBoolean())
+                BoolCommsStatus = binRead.ReadBoolean();
+            if (BoolCommsStatus)
             {
                 labelComms.Text = "ADSCOM READY";
                 labelComms.BackColor = Color.LightBlue;
                 groupBox3.BackColor = Color.LightBlue;
+                CommandBox.BackColor = Color.White;
+                CommandBox.Enabled = true;
+                buttonSendFileLine.Enabled = true;
+                buttonSendFileLine.BackColor = Color.LightBlue;
 
-            }
+                }
             else
             {
                 labelComms.Text = "ADSCOM NOT READY";
                 labelComms.BackColor = Color.LightGray;
                 groupBox3.BackColor = Color.LightGray;
-            }
+                CommandBox.BackColor = Color.LightGray;
+                CommandBox.Enabled = false;
+                buttonSendFileLine.Enabled = false;
+                buttonSendFileLine.BackColor = Color.LightGray;
+                }
             labelComms.Refresh();
 
             //mostrar ERROR OBJETIVO
@@ -1036,8 +1269,55 @@ namespace Sample01
             LabelGFeedback.Text = str;
             LabelGFeedback.Refresh();
 
+            //ADS Status display
+            labelADSStatus.Text=tcClient.Address.ToString();
+            if (tcClient.IsConnected.Equals(true)) 
+                    {
+                labelADSStatus.BackColor = Color.LightGreen;
+                labelADSLocalRemote.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                labelADSStatus.BackColor = Color.LightSalmon;
+                labelADSLocalRemote.BackColor = Color.LightSalmon;
+            }
+
+            //ADS LOCALREMOTE display
+            if (tcClient.IsLocal)
+            {
+                labelADSLocalRemote.Text = "LOCAL";
+            }
+            else
+            {
+                labelADSLocalRemote.Text = "REMOTE";
+            }
 
 
+
+
+
+            }
+            catch
+            {
+
+            }
+
+            //LOAD FILE
+            labelFileName.Text = filePath;
+            total_lines = fileContent.Split('\n').Length;
+            labelFileLines.Text = Convert.ToString(total_lines) + " Lineas";
+            progressBarFile.Maximum = total_lines;
+            progressBarFile.Value = current_line-1;
+            labelLineaActual.Text = "Proxima #" + current_line + ": " + GetLine(fileContent, current_line);
+            if (BoolRunFile & BoolCommsStatus)
+                {
+                    buttonSendFileLine.PerformClick();
+                }
+            if (current_line > total_lines)
+            {
+                BoolRunFile = false;
+            }
+           
 
 
         }
